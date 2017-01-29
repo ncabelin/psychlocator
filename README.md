@@ -7,11 +7,12 @@ This app is a reconfigured version made with the MEAN Stack. (Used to have Fireb
 ```
 /app
 	/models
-		locator.js
-	route.js
+		location.js - Location models
+		user.js
+	route.js - contains routes
 
 /config
-	database.js
+	database.js - contains MongoDB connection
 
 /public
 	core.js - angular app
@@ -33,6 +34,7 @@ Dependencies :
 2. mongoose
 3. body-parser
 4. passport
+5. method-override
 
 ## Frontend
 
