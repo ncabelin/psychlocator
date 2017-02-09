@@ -5,11 +5,13 @@ var database = require('./config/database');
 var port = process.env.PORT || 8080;
 var ip = process.env.IP;
 var bodyParser = require('body-parser');
+var morgan = require('morgan');
 var methodOverride = require('method-override');
 
 // connect to mLab
 mongoose.connect(database.url);
 
+app.use(morgan('dev'));
 app.use(methodOverride('_method'));
 // static files access
 app.use(express.static(__dirname + '/public'));
