@@ -17,7 +17,8 @@ angular.module('psychLocator', ['ngRoute', 'ui.bootstrap'])
         templateUrl: './pages/zip.html',
         controller: 'zipController',
         controllerAs: 'zip'
-      });
+      })
+      .otherwise({templateUrl: './pages/main.html'});
   })
 
   // fix for the routing issue
@@ -25,9 +26,36 @@ angular.module('psychLocator', ['ngRoute', 'ui.bootstrap'])
 	  $locationProvider.hashPrefix('');
 	}])
 
-  .controller('mainController', function() {
-    this.isNavCollapsed = true;
-    this.isCollapsed = false;
+  .controller('mainController', function($http) {
+    var self = this;
+    this.logAlert = this.regAlert = false;
+    this.reg = { username: '', password: '', email: '' };
+    this.log = function(login) {
+      if (login.username && login.password) {
+        self.logAlert = false;
+        $http.post('/login', login)
+          .then(function(result) {
+            console.log(result.data);
+          }, function(err) {
+            self.logAlert = err.data.message;
+          });
+      } else {
+        self.logAlert = 'Please enter all fields to login';
+      }
+    };
+    this.register = function(reg) {
+      if (reg.username && reg.password && reg.email) {
+        self.regAlert = false;
+        $http.post('/register', reg).then(function(result) {
+          console.log(result.data);
+        }, function(err) {
+          console.log(err);
+          self.regAlert = err.data;
+        });
+      } else {
+        self.regAlert = 'Please fill up all fields';
+      }
+    };
   })
 
   .controller('gpsController', function() {

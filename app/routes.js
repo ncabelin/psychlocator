@@ -1,4 +1,5 @@
 var Location = require('./models/location');
+var User = require('./models/user');
 
 module.exports = function(app) {
 
@@ -40,6 +41,41 @@ module.exports = function(app) {
         res.json(loc);
       });
     });
+  });
+
+  app.post('/register', function(req, res) {
+    var user = new User;
+    user.username = req.body.username;
+    user.password = req.body.password;
+    user.email = req.body.email;
+    if (!user.username ||
+      !user.password ||
+      !user.email) {
+        res.status(400).send('Please fill in all fields');
+      } else {
+        user.save(function(err) {
+          if (err) {
+            res.status(400).send('Email / Username already exists');
+          } else {
+            res.json('Registered');
+          }
+        });
+      }
+  });
+
+  app.post('/login', function(req, res) {
+    User.findOne({ username: req.body.username })
+      .select('email username password')
+      .exec(function(err, user) {
+        if (err) throw err;
+        if (!user) {
+          res.status(400).json({ success: false, data: 'User not found'});
+        } else {
+          var validateUser = user.comparePassword(req.body.password);
+          console.log(validateUser);
+          // install jsonwebtoken
+        }
+      });
   });
 
   app.get('*', function(req, res) {
