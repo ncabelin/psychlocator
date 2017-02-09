@@ -35,6 +35,8 @@ Dependencies :
 3. body-parser
 4. passport
 5. method-override
+6. morgan
+7. bcrypt-nodejs
 
 ## Frontend
 
