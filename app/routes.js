@@ -1,5 +1,7 @@
 var Location = require('./models/location');
 var User = require('./models/user');
+var jwt = require('jsonwebtoken');
+var secret = require('../config/jwt_secret');
 
 module.exports = function(app) {
 
@@ -71,9 +73,15 @@ module.exports = function(app) {
         if (!user) {
           res.status(400).json({ success: false, data: 'User not found'});
         } else {
-          var validateUser = user.comparePassword(req.body.password);
-          console.log(validateUser);
-          // install jsonwebtoken
+          if (req.body.password) {
+            var validateUser = user.comparePassword(req.body.password);
+            console.log(validateUser);
+            // install jsonwebtoken
+            var token = jwt.sign({}, secret, { expiresIn: '24h'});
+            res.json({ success: true, message: 'User authenticated', token: token});
+          } else {
+            res.status(400).json({ success: false, data: 'No password entered'});
+          }
         }
       });
   });
